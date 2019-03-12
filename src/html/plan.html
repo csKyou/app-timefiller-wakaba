@@ -55,6 +55,11 @@
       <div class="slide-set">
         <div class="list">
           <ul id="plan-list" class="plan-list-area"></ul>
+          <ul id="not-plan-list" class="plan-list-area" style="display:none">
+            <li>
+              イベントはありません。
+            </li>
+          </ul>
         </div>
       </div>
     </div>
@@ -105,13 +110,53 @@
         $("#title-date").text(nowMoment.format('M/DD(ddd)'));
         var paramObj = {};
         paramObj.callback = function(odataObj) {
-          events = odataObj.d.results;
-          setHandlebars();          
+          planList = odataObj.d.results;
+          getPlanningAPI().done(function(planningObj) {
+            if (_.isUndefined(sessionStorage.planStatus) || _.isNull(sessionStorage.planStatus)) {
+              $("title").text("プラン一覧");
+              $("#planList").addClass("current");
+              $("#considerationList").removeClass("current");
+              events = planList;
+              _.each(planningObj.d.results, function(p_event, p_index, p_list) {
+                _.every(events, function(event) {
+                  if (p_event.event_id == event.__id) {
+                    event.planStatus = p_event.planStatus;
+                    return false;
+                  }
+                  return true;
+                })
+              });
+            } else {
+              $("title").text("検討中一覧");
+              $("#considerationList").addClass("current");
+              $("#planList").removeClass("current");
+              planStatus = sessionStorage.planStatus;
+              events = planningObj.d.results;
+              _.each(events, function(p_event, p_index, p_list) {
+                _.every(planList, function(event) {
+                  if (planStatus == p_event.planStatus && p_event.event_id == event.__id) {
+                    $.extend(p_event, event);
+                    return false;
+                  }
+                  return true;
+                })
+              });
+            }
+
+            console.log(events);
+          }).fail(function() {
+            console.log(e);
+          }).always(function() {
+            setHandlebars();
+          })
         }
         getSortedEvents(paramObj);
       });
 
       setHandlebars = function() {
+        dataCnt = events.length;
+        $("#plan-list").show();
+        $("#not-plan-list").hide();
         Handlebars.registerHelper({
           'eq': function(v1, v2) {
             return v1 == v2;
@@ -122,7 +167,17 @@
           'ff_date': function(date) {
             // For FF2018 May 18th
             let dateFF = nowMoment;
-            return dateFF.isSame(moment(date), 'day');
+            if (dateFF.isSame(moment(date), 'day')) {
+              return true;
+            } else {
+              dataCnt--;
+              if (dataCnt == 0) {
+                $("#plan-list").hide();
+                $("#not-plan-list").show();
+              }
+              return false;
+            }
+            
           }
         });
         var source = $("#plans-template").text();
@@ -146,7 +201,7 @@
 
 
   <footer class="schedule-list">
-    <button onclick="javascript:location.href = 'index.html';">
+    <button id="recommandList" onclick="javascript:location.href = 'index.html';">
       <i class="fas fa-calendar-alt fa-2x icon"></i>
       <div class="icon-text">おすすめ</div>
     </button>
@@ -154,11 +209,11 @@
       <i class="fa fa-bullhorn fa-2x icon"></i>
       <div class="icon-text">ピックアップ</div>
     </button>
-    <button class="current" onclick="javascript:location.href = 'plan.html';">
+    <button id="planList" class="current" onclick="javascript:sessionStorage.removeItem('planStatus');location.href = 'plan.html';">
       <i class="fas fa-clipboard fa-2x icon"></i>
       <div class="icon-text">プラン一覧</div>
     </button>
-    <button>
+    <button id="considerationList" onclick="javascript:sessionStorage.planStatus = 'consideration';location.href = 'plan.html';">
       <i class="fas fa-star fa-2x icon"></i>
       <div class="icon-text">検討中</div>
     </button>

@@ -39,6 +39,9 @@ Common.accessData = {
     expires: null,
     refExpires: null
 };
+if (sessionStorage["Common.accessData"]) {
+    Common.accessData = JSON.parse(sessionStorage["Common.accessData"]);
+}
 
 Common.path_based_cellurl_enabled = true;
 Common.unitUrl = "";

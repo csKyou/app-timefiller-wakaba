@@ -165,12 +165,14 @@ $(function () {
             $(".consider-stamp").toggle();
             $(".consider-stamp").addClass("animate");
           }, 50);
+
+          updatePlanning(eventId, "consideration");
         }
       } else {
         if ($(".joining-stamp").css("display") == "none") {
           $(".consider-stamp").toggle();
+          deletePlanning(eventId);
         }
-
       }
     });
 
@@ -195,9 +197,5 @@ $(function () {
         }
       }
     });
-
-
   }
-
-
 });

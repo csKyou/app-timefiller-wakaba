@@ -85,6 +85,55 @@ nextDayDate = function(momentObj, callback) {
   getSortedEvents(paramObj);
 }
 
+updatePlanning = function(eventId, status) {
+  let tempData = {
+    event_id: eventId,
+    planStatus: status
+  };
+  $("footer").css("pointer-events", "none");
+  getPlanningAPI(eventId).done(function(planningObj) {
+    if (planningObj.d.results.length > 0) {
+      updatePlanningAPI(tempData, planningObj.d.results[0].__id).done(function() {
+
+      }).fail(function(e) {
+        console.log(e);
+      }).always(function() {
+        $("footer").css("pointer-events", "auto");
+      });
+    } else {
+      updatePlanningAPI(tempData).done(function() {
+
+      }).fail(function(e) {
+        console.log(e);
+      }).always(function() {
+        $("footer").css("pointer-events", "auto");
+      });
+    }
+  }).fail(function(e) {
+    console.log(e);
+    $("footer").css("pointer-events", "auto");
+  })
+}
+
+deletePlanning = function(eventId) {
+  $("footer").css("pointer-events", "none");
+  getPlanningAPI(eventId).done(function(planningObj) {
+    if (planningObj.d.results.length > 0) {
+      deletePlanningAPI(planningObj.d.results[0].__id).done(function() {
+
+      }).fail(function(e) {
+        console.log(e);
+      }).always(function() {
+        $("footer").css("pointer-events", "auto");
+      });
+    } else {
+      $("footer").css("pointer-events", "auto"); 
+    }
+  }).fail(function() {
+    $("footer").css("pointer-events", "auto");
+  });
+}
+
 $(function () {
 
   Drawer_Menu();
@@ -324,3 +373,58 @@ function getAPI(url, token) {
     }
   });
 }
+
+/*
+ * GET
+ */
+function getPlanningAPI(event_id) {
+    let filter = "";
+    if (event_id) {
+      filter = "?$filter=event_id%20eq%20'"+event_id+"'";
+    }
+
+    return $.ajax({
+        type: "GET",
+        url: Common.getBoxUrl() + 'OData/planningList' + filter,
+        headers: {
+            'Accept':'application/json',
+            'Authorization':'Bearer ' + Common.getToken()
+        }
+    });
+};
+
+/*
+ * POST or PUT
+ */
+function updatePlanningAPI(tempData, id) {
+    let method = "POST";
+    let __id = "";
+    if (id) {
+      method = "PUT";
+      __id = "('"+id+"')";
+    }
+
+    return $.ajax({
+        type: method,
+        url: Common.getBoxUrl() + 'OData/planningList' + __id,
+        data: JSON.stringify(tempData),
+        headers: {
+            'Accept':'application/json',
+            'Authorization':'Bearer ' + Common.getToken()
+        }
+    });
+};
+
+/*
+ * DELETE
+ */
+function deletePlanningAPI(id) {
+    return $.ajax({
+        type: "DELETE",
+        url: Common.getBoxUrl() + 'OData/planningList(\''+id+'\')',
+        headers: {
+            'Accept':'application/json',
+            'Authorization':'Bearer ' + Common.getToken()
+        }
+    });
+};

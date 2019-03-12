@@ -33,7 +33,6 @@
   <script>
   $(function() {
     let selectedEventId = location.search.match(/eventId=(.*?)(&|$)/);
-    let eventId;
     if (_.isUndefined(selectedEventId) || _.isNull(selectedEventId)) {
       eventId = "per-1";
     } else {
@@ -47,10 +46,20 @@
     paramsObj.callback = function(odataObj) {
       sortedEvents = odataObj.d.results;
       tempEvent = _.findWhere(sortedEvents, {__id: eventId});
-      console.log(tempEvent);
-      dispTemplate(tempEvent);
+      getPlanningAPI().done(function(planningObj) {
+        _.each(planningObj.d.results, function(event, index, list) {
+          if (eventId == event.event_id) {
+            tempEvent.planStatus = event.planStatus;
+          }
+        });
+
+        console.log(tempEvent);
+        dispTemplate(tempEvent);
+      }).fail(function() {
+        console.log(e);
+      })
     }
-    getSortedEvents(paramsObj);  
+    getSortedEvents(paramsObj);
   });
   </script>
 

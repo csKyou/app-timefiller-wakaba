@@ -30,6 +30,7 @@
   <script src="./js/common.js"></script>
   <script src="./js/app.js"></script>
   <script src="./js/skillshare.js"></script>
+  <script src="./js/recommend.js"></script>
   <script src="./data/itou/profile.js"></script>
   <script src="./data/DIY.js"></script>
   <script src="./data/event.js"></script>
@@ -40,6 +41,9 @@
 <script>
   additionalCallback = function() {
     targetCellName = sessionStorage.cellname;
+    $("#today").text(moment("2018-03-18T09:00:00+09:00").format('M/DD(ddd)'));
+    getRecommendList(moment("2018-03-18T09:00:00+09:00").toISOString(), createList);
+/*
     sessionStorage.setItem("planStatus", JSON.stringify(planStatus[targetCellName]));
     let urlOData = Common.getBoxUrl() + "OData/recommendedSchedule";
     let filterStr = $.param({
@@ -71,8 +75,9 @@
         });
         createList();  
       }
-      getSortedEvents(paramsObj);      
+      getSortedEvents(paramsObj);
     })
+*/
   }
 </script>
 <body>
@@ -88,7 +93,7 @@
     <button id="prev-btn">
       <i class="fas fa-caret-left fa-2x icon"></i>
     </button>
-    <span id="today">5/18(金)</span>
+    <span id="today"></span>
     <button id="next-btn">
       <i class="fas fa-caret-right fa-2x icon"></i>
     </button>
@@ -108,7 +113,7 @@
             <!-- Start from home -->
             <li class="time-list">
               <div class="list-text">
-                {{time start}}
+                {{time startDate}}
               </div>
             </li>
             <li class="default-schedule schedule-list-s">
@@ -144,7 +149,9 @@
             </li>
             <li class="time-list">
               <div class="list-text">
-                {{time end}}
+                {{#if endDate}}
+                  {{time endDate}}
+                {{/if}}
               </div>
             </li>
             {{/if}}
@@ -170,8 +177,8 @@
                 </div>
                 <div class="etc_area">
                   <div class="status">
-                    <img src="{{service.image}}" alt="car" style="width: 18px; height: 18px; vertical-align: -.20em;">
-                    <span>【{{service.name}}】</span>
+                    <img src="{{serviceImage}}" alt="car" style="width: 18px; height: 18px; vertical-align: -.20em;">
+                    <span>【{{serviceName}}】</span>
                   </div>
                 </div>
               </div>
@@ -230,7 +237,7 @@
             <!-- lunch -->
             <li class="time-list">
               <div class="list-text">
-                {{time start}}
+                {{time startDate}}
               </div>
             </li>
             <li class="{{planStatus}}-schedule event schedule-list-m">
@@ -247,14 +254,14 @@
                 </div>
                 <div class="etc_area">
                   <div class="status">
-                    【{{service.name}}】
+                    【{{serviceName}}】
                   </div>
                 </div>
               </div>
             </li>
             <li class="time-list">
               <div class="list-text">
-                {{time end}}
+                {{time endDate}}
               </div>
             </li>
             {{/if}}
@@ -263,6 +270,7 @@
 
 
             <!--  back to home -->
+<!--
             <li class="time-list">
               <div class="list-text">
                 18:20
@@ -296,9 +304,10 @@
             </li>
             <li class="list-footer">
             </li>
+-->
           </script>
           <script>
-              createList = function() {
+              createList = function(recommendedSchedule) {
                 Handlebars.registerHelper({
                   'eq': function(v1, v2) {
                     return v1 == v2;
@@ -308,7 +317,7 @@
                   },
                   'ff_date': function(date) {
                     // For FF2018 May 18th
-                    let dateFF = moment("2018-05-18T09:00:00+09:00");
+                    let dateFF = moment("2019-03-18T09:00:00+09:00");
                     return dateFF.isSame(moment(date), 'day');
                   },
                   'transportation_html': function(object) {
@@ -338,6 +347,7 @@
                 var source = $("#recommended-template").text();
                 var template = Handlebars.compile(source);
                 //var html = template(sortedEventHash);
+console.log(recommendedSchedule);
                 var html = template(recommendedSchedule);
                 $("#recommended-schedule").append(html);
               }
@@ -359,11 +369,11 @@
       <i class="fa fa-bullhorn fa-2x icon"></i>
       <div class="icon-text">ピックアップ</div>
     </button>
-    <button onclick="javascript:location.href = 'plan.html';">
+    <button onclick="javascript:sessionStorage.removeItem('planStatus');location.href = 'plan.html';">
       <i class="fas fa-clipboard fa-2x icon"></i>
       <div class="icon-text">プラン一覧</div>
     </button>
-    <button>
+    <button onclick="javascript:sessionStorage.planStatus = 'consideration';location.href = 'plan.html';">
       <i class="fas fa-star fa-2x icon"></i>
       <div class="icon-text">検討中</div>
     </button>
