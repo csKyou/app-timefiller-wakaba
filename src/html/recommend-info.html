@@ -32,24 +32,31 @@
   <script>
   $(function() {
     let selectedEventId = location.search.match(/eventId=(.*?)(&|$)/);
-    let eventId;
     if (_.isUndefined(selectedEventId) || _.isNull(selectedEventId)) {
       eventId = "per-1";
     } else {
       eventId = selectedEventId[1] || "per-1";
     }
-    let paramObj = {};
-    paramObj.callback = function(odataObj) {
-      sortedEvents = odataObj.d.results;
-      moment.updateLocale('ja', {
+    moment.updateLocale('ja', {
         weekdays: ["日曜日","月曜日","火曜日","水曜日","木曜日","金曜日","土曜日"],
         weekdaysShort: ["日","月","火","水","木","金","土"],
       });
-
+    let paramObj = {};
+    paramObj.callback = function(odataObj) {
+      sortedEvents = odataObj.d.results;
       tempEvent = _.findWhere(sortedEvents, {__id: eventId});
-      console.log(tempEvent);
+      getPlanningAPI().done(function(planningObj) {
+        _.each(planningObj.d.results, function(event, index, list) {
+          if (eventId == event.event_id) {
+            tempEvent.planStatus = event.planStatus;
+          }
+        });
 
-      dispInfo();
+        console.log(tempEvent);
+        dispInfo(tempEvent);
+      }).fail(function() {
+        console.log(e);
+      })
     }
     getSortedEvents(paramObj)
     
@@ -156,7 +163,7 @@
   </script>
 
   <script>
-      dispInfo = function() {
+      dispInfo = function(tempEvent) {
         Handlebars.registerHelper({
           'eq': function(v1, v2) {
             return v1 == v2;
@@ -175,6 +182,7 @@
         var template = Handlebars.compile(source);
         var html = template(tempEvent);
         $("#main-area").html(html);
+
         source = $("#header-template").text();
         template = Handlebars.compile(source);
         html = template(tempEvent);
