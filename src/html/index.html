@@ -41,8 +41,21 @@
 <script>
   additionalCallback = function() {
     targetCellName = sessionStorage.cellname;
-    $("#today").text(moment("2018-03-18T09:00:00+09:00").format('M/DD(ddd)'));
-    getRecommendList(moment("2018-03-18T09:00:00+09:00").toISOString(), createList);
+    nowMoment = moment("2018-03-18T09:00:00+09:00");
+    $("#today").text(nowMoment.format('M/DD(ddd)'));
+    getRecommendList(nowMoment.toISOString(), createList);
+
+    $('#prev-btn').off().click(function () {
+      nowMoment.add(-1,"day");
+      $("#today").text(nowMoment.format('M/DD(ddd)'));
+      getRecommendList(nowMoment.toISOString(), createList);
+    });
+
+    $('#next-btn').off().click(function () {
+      nowMoment.add(1,"day");
+      $("#today").text(nowMoment.format('M/DD(ddd)'));
+      getRecommendList(nowMoment.toISOString(), createList);
+    });
 /*
     sessionStorage.setItem("planStatus", JSON.stringify(planStatus[targetCellName]));
     let urlOData = Common.getBoxUrl() + "OData/recommendedSchedule";
@@ -317,7 +330,7 @@
                   },
                   'ff_date': function(date) {
                     // For FF2018 May 18th
-                    let dateFF = moment("2019-03-18T09:00:00+09:00");
+                    let dateFF = nowMoment;
                     return dateFF.isSame(moment(date), 'day');
                   },
                   'transportation_html': function(object) {
@@ -349,7 +362,7 @@
                 //var html = template(sortedEventHash);
 console.log(recommendedSchedule);
                 var html = template(recommendedSchedule);
-                $("#recommended-schedule").append(html);
+                $("#recommended-schedule").html(html);
               }
           </script>
         </div>
