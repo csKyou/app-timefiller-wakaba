@@ -3,8 +3,8 @@ exports.accInfo = (function() {
      * Begin of your Personium app configurations
      */
     var appCellUrl = 'https://app-timefiller-wakaba.demo.personium.io/'; // for example: https://demo.personium.io/appCellName/ or https://appCellName.demo.personium.io/
-    var appUserId = 'tokenAcc';
-    var appUserPass = 'personiumtoken';
+    var appUserId = '***';
+    var appUserPass = '***';
     /*
      * End of your Personium app configurations
      */
