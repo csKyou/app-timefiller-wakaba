@@ -603,3 +603,9 @@ footer {
 .pn-textarea{
     border:0;
 }
+
+.width-full-btn {
+    width: 100%;
+    color: #2979FF;
+    font-size: 1.5rem;
+}

@@ -3,5 +3,10 @@
      "web": "https://app-timefiller-wakaba.demo.personium.io/__/html/index.html",
      "android": "***:",
      "ios": "***:"
+  },
+  "organization": {
+  	 "web": "https://app-timefiller-wakaba.demo.personium.io/__/html/index_org.html",
+     "android": "***:",
+     "ios": "***:"
   }
 }

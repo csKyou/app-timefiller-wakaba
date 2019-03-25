@@ -31,10 +31,6 @@
   <script src="./js/app.js"></script>
   <script src="./js/skillshare.js"></script>
   <script src="./js/recommend.js"></script>
-  <script src="./data/itou/profile.js"></script>
-  <script src="./data/DIY.js"></script>
-  <script src="./data/event.js"></script>
-  <script src="./data/volunteer.js"></script>
 
   <title>おすすめスケジュール</title>
 </head>
@@ -56,41 +52,6 @@
       $("#today").text(nowMoment.format('M/DD(ddd)'));
       getRecommendList(nowMoment.toISOString(), createList);
     });
-/*
-    sessionStorage.setItem("planStatus", JSON.stringify(planStatus[targetCellName]));
-    let urlOData = Common.getBoxUrl() + "OData/recommendedSchedule";
-    let filterStr = $.param({
-      "$top": 1000,
-      "$orderby": "__published asc"
-    });
-    let queryUrl = urlOData + "?" + filterStr;
-    let recommend = [];
-    getAPI(queryUrl, Common.getToken()).done(function(odataObj) {
-      console.log(odataObj);
-      _.each(odataObj.d.results, function(schedule) {
-        schedule.service = {};
-        schedule.service.image = schedule.service_image;
-        schedule.service.name = schedule.service_name;
-        recommend.push(schedule);
-      })
-      sessionStorage.setItem("recommendedSchedule", JSON.stringify(recommend));
-    }).always(function() {
-      let paramsObj = {};
-      paramsObj.callback = function(odataObj) {
-        let sortedEvents = odataObj.d.results;
-        sortedEventHash = _.indexBy(sortedEvents, 'id');
-        recommendedSchedule = JSON.parse(sessionStorage.recommendedSchedule);
-        _.each(recommendedSchedule, function(event, index, list) {
-          if (event.type == "event") {
-            $.extend(event, sortedEventHash[event.id]);
-            console.log(event);
-          }
-        });
-        createList();  
-      }
-      getSortedEvents(paramsObj);
-    })
-*/
   }
 </script>
 <body>
@@ -98,7 +59,7 @@
     <div class="header-title">
       <div class="title">おすすめスケジュール</div>
     </div>
-    <button id="setting_btn" class="header-btn pn-btn"  onclick="javascript:location.href = 'data_manager.html';">
+    <button id="setting_btn" class="header-btn pn-btn header-right"  onclick="javascript:location.href = 'data_manager.html';">
       <i class="fas fa-cog fa-2x icon"></i>
     </button>
   </header>

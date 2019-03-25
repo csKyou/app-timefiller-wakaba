@@ -62,7 +62,7 @@ function getSortedEvents(paramObj) {
 }
 
 getNamesapces = function() {
-    return ['common'];
+    return ['common', 'glossary'];
 };
 
 prevDayDate = function(momentObj, callback) {

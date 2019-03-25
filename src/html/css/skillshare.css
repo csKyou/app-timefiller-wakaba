@@ -55,7 +55,7 @@ header.top {
   color: #ffffff;
 }
 
-header.top #setting_btn {
+header.top .header-right {
   right: 12px;
   color: #ffffff;
 }
@@ -124,6 +124,15 @@ main.plan-list {
 
 .h-footer {
   padding-bottom: 4.2rem;
+}
+
+main.event-list {
+  padding-top: 4.0rem;
+  height: 100%; 
+}
+
+.e-footer {
+  padding-bottom: 3.0rem; 
 }
 
 main .slide-area {
