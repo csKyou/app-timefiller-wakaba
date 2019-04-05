@@ -43,9 +43,8 @@
       weekdaysShort: ["日","月","火","水","木","金","土"],
     });
     var paramsObj = {};
-    paramsObj.callback = function(odataObj) {
-      sortedEvents = odataObj.d.results;
-      tempEvent = _.findWhere(sortedEvents, {__id: eventId});
+    getEventAPI(eventId).done(function(eventInfo) {
+      let tempEvent = eventInfo;
       getPlanningAPI().done(function(planningObj) {
         _.each(planningObj.d.results, function(event, index, list) {
           if (eventId == event.event_id) {
@@ -58,8 +57,9 @@
       }).fail(function() {
         console.log(e);
       })
-    }
-    getSortedEvents(paramsObj);
+    }).fail(function (e) {
+      console.log(e);
+    });
   });
   </script>
 

@@ -18,16 +18,17 @@
         <Property Name='__id' Type='Edm.String' Nullable='false' DefaultValue='UUID()' p:Format='regEx(&apos;^[a-zA-Z0-9][a-zA-Z0-9-_:]{0,199}$&apos;)'/>
         <Property Name='__published' Type='Edm.DateTime' Nullable='false' DefaultValue='SYSUTCDATETIME()' />
         <Property Name='__updated' Type='Edm.DateTime' Nullable='false' DefaultValue='SYSUTCDATETIME()' />
+        <Property Name='id' Type='Edm.String' Nullable='false'/>
         <Property Name='summary' Type='Edm.String' Nullable='true'/>
         <Property Name='detail' Type='Edm.String' Nullable='true'/>
-        <Property Name='start' Type='Edm.DateTime' Nullable='true'/>
-        <Property Name='end' Type='Edm.DateTime' Nullable='true'/>
+        <Property Name='startDate' Type='Edm.DateTime' Nullable='true'/>
+        <Property Name='endDate' Type='Edm.DateTime' Nullable='true'/>
         <Property Name='recruitmentNumber' Type='Edm.Int32' Nullable='true'/>
         <Property Name='price' Type='Edm.Int32' Nullable='true'/>
         <Property Name='place' Type='Edm.String' Nullable='true'/>
         <Property Name='address' Type='Edm.String' Nullable='true'/>
         <Property Name='image' Type='Edm.String' Nullable='true'/>
-        <Property Name='postDate' Type='Edm.String' Nullable='true'/>
+        <Property Name='postDate' Type='Edm.DateTime' Nullable='true'/>
         <Property Name='postalCode' Type='Edm.String' Nullable='true'/>
         <Property Name='phoneNumber' Type='Edm.String' Nullable='true'/>
         <Property Name='skills' Type='Edm.String' Nullable='true' CollectionKind='List'/>

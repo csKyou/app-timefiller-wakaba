@@ -4,36 +4,38 @@ function(request){
         personium.validateRequestMethod(["POST"], request);
 
         var params = personium.parseBodyAsQuery(request);
-        // verify parameter information
-        personium.setAllowedKeys(['eventId', 'cellUrl']);
-        personium.setRequiredKeys(['eventId', 'cellUrl']);
-        personium.validateKeys(params);
 
         // 
         var cell = dc.as(accInfo.APP_CELL_ADMIN_INFO).cell();
         var odata = cell.box().odata('OData');
         var odataEntity = odata.entitySet('EventList');
 
-        // uuid取得
+        // uuid acquisition
         uuidRes = odataEntity.query().filter("event_id eq '" + params.eventId + "' and cellUrl eq '" + params.cellUrl + "'").select('__id').run().d.results;
         var uuid = null;
         if (uuidRes.length != 0) {
             uuid = uuidRes[0].__id;
         }
 
-        //
+        // Information setting
         var propList = {};
         propList['event_id'] = params.eventId;
-        propList['cellUrl'] = params.cellUrl; 
+        propList['cellUrl'] = params.cellUrl;
+        propList['startDate'] = params.startDate;
+        propList['endDate'] = params.endDate;
+        propList['summary'] = params.summary;
+        propList['image'] = params.image;
         if (uuid) {
-            // edit
+            // If uuid can be obtained
+            // Update data
             odataEntity.merge(
                 uuid,
                 propList,
                 "*"
             );
         } else {
-            // create
+            // If uuid can not be acquired
+            // Create New
             odataEntity.create(propList);
         }
         

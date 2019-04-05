@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 const APP_URL = "https://app-timefiller-wakaba.demo.personium.io/";
+const PERSONIUM_CALENDAR_URL = "https://app-personium-calendar.demo.personium.io/";
 const APP_BOX_NAME = 'app-timefiller-wakaba';
 
 getEngineEndPoint = function() {
@@ -33,7 +34,7 @@ function getProfileFromSession(callback) {
 };
 
 function getSortedEvents(paramObj) {
-  let urlOData = APP_URL + "__/OData/Events";
+  let urlOData = APP_URL + "__/OData/EventList";
   let query = {
     "$top": 1000,
     "$orderby": "startDate asc, endDate desc"
@@ -371,6 +372,18 @@ function getAPI(url, token) {
       'Authorization': 'Bearer ' + token,
       'Accept':'application/json'
     }
+  });
+}
+
+function getEventAPI(id) {
+  return $.ajax({
+    type: "POST",
+    url: APP_URL + "__/html/Engine/getEvent",
+    headers: {
+      'Accept':'application/json',
+      'Authorization':'Bearer ' + Common.getToken()
+    },
+    data: {id: id}
   });
 }
 

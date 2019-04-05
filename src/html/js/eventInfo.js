@@ -43,10 +43,10 @@ function setEvent(data) {
 	$("#event-title").val(data.title);
 	$("#event-image").val(data.image);
 	$("#description").val(data.detail);
-	let startMoment = moment(data.start);
+	let startMoment = moment(data.startDate);
 	$("#dtstart_date").val(startMoment.format("YYYY-MM-DD"));
 	$("#dtstart_time").val(startMoment.format("HH:mm"));
-	let endMoment = moment(data.end);
+	let endMoment = moment(data.endDate);
 	$("#dtend_date").val(endMoment.format("YYYY-MM-DD"));
 	$("#dtend_time").val(endMoment.format("HH:mm"));
 	$("#address").val(data.address);
@@ -130,8 +130,8 @@ function getEventInfo() {
 		title: $("#event-title").val(),
 		image: $("#event-image").val(),
 		detail: $("#description").val(),
-		start: "/Date(" + moment(start).valueOf() + ")/",
-		end: "/Date(" + moment(end).valueOf() + ")/",
+		startDate: "/Date(" + moment(start).valueOf() + ")/",
+		endDate: "/Date(" + moment(end).valueOf() + ")/",
 		address: $("#address").val(),
 		mapImage: "https://app-timefiller-wakaba.demo.personium.io/__/html/diy/img/map/34.66746-135.81908.png"
 	};
@@ -141,7 +141,7 @@ function getEventInfo() {
 
 function updateEvent(eventInfo, id) {
 	// Event registration
-	updateEventAPI(eventInfo, id).done(function(data) {
+	updateEventAPI(eventInfo, id).done(function(data, text, response) {
 		let callback = function() {
 			let msgId = "glossary:eventMessage.regist";
 			if (id) {
@@ -152,9 +152,8 @@ function updateEvent(eventInfo, id) {
 				location.href = "index_org.html";
 			});
 		}
-		if (data) {
-			let id = data.d.results.__id;
-			updateEventList(id, Common.getCellUrl()).done(function() {
+		if (response.status == 204) {
+			updateEventList(id, eventInfo).done(function() {
 				callback();
 			}).fail(function(e) {
 				console.log(e);
@@ -203,10 +202,14 @@ function deleteVEventAPI(id) {
 /**********************
    Engine
  **********************/
- function updateEventList(id, cellUrl) {
+ function updateEventList(id, eventInfo) {
  	let temp = {
  		eventId: id,
- 		cellUrl: cellUrl
+ 		cellUrl: Common.getCellUrl(),
+ 		startDate: eventInfo.startDate,
+ 		endDate: eventInfo.endDate,
+ 		summary: eventInfo.title,
+ 		image: eventInfo.image
  	}
  	return $.ajax({
  		type: "POST",

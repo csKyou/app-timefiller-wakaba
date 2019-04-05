@@ -40,24 +40,8 @@ $(function () {
         $(this).text(strLabel);
       }
 
-      if (_.isUndefined(tempEvent) || _.isNull(tempEvent)) {
-        return false;
-      }
-      tempEvent.planStatus = updatePlanStatus();
-      sessionStorage.sortedEvents = JSON.stringify(sortedEvents);
-      
       return false;
     });
-  }
-
-  function updatePlanStatus() {
-    if ($('.plan-footer-btn.plan-check-btn').hasClass('clicked')) {
-      return "confirm";
-    } else if ($('.plan-footer-btn.plan-star-btn').hasClass('clicked')) {
-      return "consideration";
-    } else {
-      return "pending";
-    }
   }
 
   /**

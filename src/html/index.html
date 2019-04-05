@@ -130,6 +130,40 @@
             </li>
             {{/if}}
 
+            <!-- calendar -->
+            {{#if (eq type "calendar")}}
+            <!-- Start from home -->
+            <li class="time-list">
+              <div class="list-text">
+                {{time startDate}}
+              </div>
+            </li>
+            <li class="default-schedule schedule-list-s">
+              <div class="list-image">
+                <div class="list-thumbnail-s">
+                  <img src="{{image}}" class="list-thumbnail">
+                </div>
+              </div>
+              <div class="list-text">
+                <div class="title">
+                  {{#if detail}}
+                  {{summary}}<span class="title-text">
+                  <br>{{detail}}</span>
+                  {{else}}
+                  {{summary}}
+                  {{/if}}
+                </div>
+              </div>
+            </li>
+            <li class="time-list">
+              <div class="list-text">
+                {{#if endDate}}
+                  {{time endDate}}
+                {{/if}}
+              </div>
+            </li>
+            {{/if}}
+
             <!-- Transportation -->
             {{#if (eq type "transportation")}}
             {{{transportation_html this}}}
@@ -138,7 +172,7 @@
             <!-- travel -->
             {{#if (eq type "ridesharing")}}
             <a href="route-info.html?planStatus={{planStatus}}">
-            <li class="{{planStatus}}-schedule traffic schedule-list-s">
+            <li class="{{planStatus}}-schedule event schedule-list-m">
               <div class="list-image">
                 <div class="list-thumbnail-xs"></div>
               </div>
