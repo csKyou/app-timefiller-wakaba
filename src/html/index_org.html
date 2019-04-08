@@ -112,6 +112,7 @@
   <script>
       additionalCallback = function() {
         var paramObj = {};
+        publishEvent();
         paramObj.callback = function(odataObj) {
           events = odataObj.d.results;
           let cnt = 0;
@@ -143,8 +144,14 @@
         }
         $("#page").text(nowPage);
 
-        $("#plan-list").show();
-        $("#not-plan-list").hide();
+        if (dataCnt > 0) {
+          $("#plan-list").show();
+          $("#not-plan-list").hide();
+        } else {
+          $("#plan-list").hide();
+          $("#not-plan-list").show();
+        }
+        
         Handlebars.registerHelper({
           'eq': function(v1, v2) {
             return v1 == v2;

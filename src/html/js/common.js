@@ -79,14 +79,6 @@ $(document).ready(function() {
                 return;
             };
 
-/*
-            var appCellToken = {
-                access_token: "/9j/4AAQSkZJRgABAQEASABIAAD/4RmQ"
-            }
-            Common.updateSessionStorage(appCellToken);
-            additionalCallback();
-*/            
-
             Common.setAppCellUrl(function() {
                 Common.startOAuth2(function(){
                     let cellUrl = Common.getTargetCellUrl();
@@ -1642,6 +1634,16 @@ Common.getExtCellRoleList = function (extUrl) {
             'Authorization': 'Bearer ' + Common.getToken()
         }
     })
+};
+Common.restCreateExtCellAPI = function (cellUrl, token, json) {
+    return $.ajax({
+        type: "POST",
+        url: cellUrl + '__ctl/ExtCell',
+        data: JSON.stringify(json),
+        headers: {
+            'Authorization': 'Bearer ' + token
+        }
+    });
 };
 Common.restAddExtCellLinkRoleAPI = function (extUrl, boxName, roleName) {
     var extCellUrl = encodeURIComponent(extUrl);

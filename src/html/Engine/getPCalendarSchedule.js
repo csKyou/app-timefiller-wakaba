@@ -67,19 +67,55 @@ function(request){
             }
         }
 
-        // Format to time filling
+        // Format to time filling(Duplicate events are combined into one event)
+        var cTitle = []; // title
+        var cSDate = ""; // event start date
+        var cEDate = ""; // event end date
         _.each(pcalData, function(data, index, list) {
+            if (cSDate == "") {
+                // First event
+                cTitle.push(data.summary);
+                cSDate  = data.dtstart;
+                cEDate = data.dtend;
+            } else {
+                var tempPrevDate = moment(cEDate);
+                var tempSDate = moment(data.dtstart);
+                if (tempPrevDate.isSameOrAfter(tempSDate)) {
+                    // Added title because event is duplicated
+                    cTitle.push(data.summary);
+                    var tempEDate = moment(data.dtend);
+                    if (tempPrevDate.isBefore(tempEDate)) {
+                        cEDate = data.dtend;
+                    }
+                } else {
+                    var schedule = {
+                        "__id": "calendar_event",
+                        "type": "calendar",
+                        "summary": cTitle,
+                        "startDate": cSDate,
+                        "endDate": cEDate,
+                        "image": pcalProfImage
+                    };
+                    calendarSchedule.push(schedule);
+
+                    cTitle = [];
+                    cTitle.push(data.summary);
+                    cSDate  = data.dtstart;
+                    cEDate = data.dtend;
+                }
+            }            
+        })
+        if (cSDate != "") {
             var schedule = {
-                "__id": "calendar_" + data.__id,
+                "__id": "calendar_event",
                 "type": "calendar",
-                "summary": data.summary,
-                "startDate": data.dtstart,
-                "endDate": data.dtend,
-                "detail": data.description,
+                "summary": cTitle,
+                "startDate": cSDate,
+                "endDate": cEDate,
                 "image": pcalProfImage
             };
             calendarSchedule.push(schedule);
-        })
+        }
 
         return personium.createResponse(200, calendarSchedule);
     } catch (e) {

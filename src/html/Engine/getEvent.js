@@ -24,7 +24,7 @@ function(request){
 
         // Get app certified transcell token
         var tToken = getTranscellToken(url, appCell.getToken().refresh_token);
-        var aToken = getAppAuthToken(url);
+        var aToken = personium.getAppToken(url);
         var bToken = getBoxAccessToken(url, tToken.access_token, aToken.access_token);
 
         // Get Box URL
@@ -55,19 +55,6 @@ function getTranscellToken(eventCellUrl, refToken) {
     var body = "grant_type=refresh_token&refresh_token=" + refToken + "&p_target=" + eventCellUrl;
     var transcellTokenRes = httpClient.post(url, headers, contentType, body);
     return JSON.parse(transcellTokenRes.body);
-}
-
-// Get app cell token
-function getAppAuthToken(eventCellUrl) {
-    var url = APP_CELL_URL + "__/html/Engine/getAppAuthToken";
-    var headers = {
-        'Accept':'application/json'
-    }
-    var contentType = "application/x-www-form-urlencoded";
-    var body = "p_target=" + eventCellUrl;
-    //var body = "p_target=https://org-sakamoto.demo.personium.io/";
-    var appAuthTokenRes = httpClient.post(url, headers, contentType, body);
-    return JSON.parse(appAuthTokenRes.body);
 }
 
 // Get app certified transcell token

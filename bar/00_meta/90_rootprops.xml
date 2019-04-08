@@ -20,6 +20,16 @@
                     <p:odata xmlns:p="urn:x-personium:xmlns"/>
                 </resourcetype>
                 <acl xml:base="https://demo.personium.io/app-timefiller-wakaba/__role/__/" xmlns:p="urn:x-personium:xmlns">
+                    <ace>
+                        <principal>
+                            <href>EventRead</href>
+                        </principal>
+                        <grant>
+                            <privilege>
+                                <read/>
+                            </privilege>
+                        </grant>
+                    </ace>
                 </acl>
             </prop>
         </propstat>

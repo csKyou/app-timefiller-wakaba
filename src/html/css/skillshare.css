@@ -55,9 +55,18 @@ header.top {
   color: #ffffff;
 }
 
+header.top .header-left {
+  left: 12px;
+  color: #ffffff;
+  cursor: pointer;
+  cursor: hand;
+}
+
 header.top .header-right {
   right: 12px;
   color: #ffffff;
+  cursor: pointer;
+  cursor: hand;
 }
 
 header.top>.header-title {
